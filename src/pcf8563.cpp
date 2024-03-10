@@ -95,16 +95,16 @@ void PCF8563_Class::setDateTime(uint16_t year,
     _writeByte(PCF8563_SEC_REG, 7, _data);
 }
 
-bool PCF8563_Class::isVaild()
+bool PCF8563_Class::isValid()
 {
-    _readByte(PCF8563_SEC_REG, 1, &_isVaild);
-    return !(_isVaild  & (1 << 7));
+    _readByte(PCF8563_SEC_REG, 1, &_isValid);
+    return !(_isValid  & (1 << 7));
 }
 
 RTC_Date PCF8563_Class::getDateTime()
 {
     uint16_t year;
-    uint8_t cetury = 0;
+    uint8_t century = 0;
     _readByte(PCF8563_SEC_REG, 7, _data);
     _voltageLow = (_data[0] & PCF8563_VOL_LOW_MASK);
     _data[0] = _bcd_to_dec(_data[0] & (~PCF8563_VOL_LOW_MASK));
@@ -112,11 +112,11 @@ RTC_Date PCF8563_Class::getDateTime()
     _data[2] = _bcd_to_dec(_data[2] & PCF8563_HOUR_MASK);
     _data[3] = _bcd_to_dec(_data[3] & PCF8563_DAY_MASK);
     _data[4] = _bcd_to_dec(_data[4] & PCF8563_WEEKDAY_MASK);
-    cetury = _data[5] & PCF8563_CENTURY_MASK;
+    century = _data[5] & PCF8563_CENTURY_MASK;
     _data[5] = _bcd_to_dec(_data[5] & PCF8563_MONTH_MASK);
     year = _bcd_to_dec(_data[6]);
-    //cetury :  0 = 1900 , 1 = 2000
-    year = cetury ?  1900 + year : 2000 + year;
+    //century :  0 = 1900 , 1 = 2000
+    year = century ?  1900 + year : 2000 + year;
     return RTC_Date(
                year,
                _data[5],
@@ -255,11 +255,11 @@ void PCF8563_Class::disableTimer()
     _writeByte(PCF8563_STAT2_REG, 1, _data);
 }
 
-void PCF8563_Class::setTimer(uint8_t val, uint8_t freq, bool enIntrrupt)
+void PCF8563_Class::setTimer(uint8_t val, uint8_t freq, bool enInterrupt)
 {
     _readByte(PCF8563_STAT2_REG, 1, &_data[0]);
     _readByte(PCF8563_TIMER1_REG, 1, &_data[1]);
-    if (enIntrrupt) {
+    if (enInterrupt) {
         _data[0] |= 1 << 4;
     } else {
         _data[0] &= ~(1 << 4);
@@ -297,10 +297,10 @@ void PCF8563_Class::disableCLK()
     _writeByte(PCF8563_SQW_REG, 1, _data);
 }
 
-const char *PCF8563_Class::formatDateTime(uint8_t sytle)
+const char *PCF8563_Class::formatDateTime(uint8_t style)
 {
     RTC_Date t = getDateTime();
-    switch (sytle) {
+    switch (style) {
     case PCF_TIMEFORMAT_HM:
         snprintf(format, sizeof(format), "%d:%d", t.hour, t.minute);
         break;

@@ -154,7 +154,7 @@ public:
     void resetAlarm();
     void setAlarm(RTC_Alarm alarm);
     void setAlarm(uint8_t hour, uint8_t minute, uint8_t day, uint8_t weekday);
-    bool isVaild();
+    bool isValid();
 
     void setAlarmByWeekDay(uint8_t weekday);
     void setAlarmByHours(uint8_t hour);
@@ -165,7 +165,7 @@ public:
     bool isTimerActive();
     void enableTimer();
     void disableTimer();
-    void setTimer(uint8_t val, uint8_t freq, bool enIntrrupt);
+    void setTimer(uint8_t val, uint8_t freq, bool enInterrupt);
     void clearTimer();
 
 
@@ -176,7 +176,7 @@ public:
 #endif
     void syncToRtc();
 
-    const char *formatDateTime(uint8_t sytle = PCF_TIMEFORMAT_HMS);
+    const char *formatDateTime(uint8_t style = PCF_TIMEFORMAT_HMS);
     uint32_t getDayOfWeek(uint32_t day, uint32_t month, uint32_t year);
     uint8_t status2();
 
@@ -196,7 +196,7 @@ private:
 
         //Adapt to HYM8563, no stop bit is sent after reading the sending register address
         _i2cPort->endTransmission(false);
-        _i2cPort->requestFrom(_address, nbytes, 1);  //HYM8563 send stopbit
+        _i2cPort->requestFrom(_address, nbytes, 1);  //HYM8563 send stop bit
 
         uint8_t index = 0;
         while (_i2cPort->available())
@@ -214,7 +214,7 @@ private:
         return 0;
     }
 
-    uint8_t _isVaild = false;
+    uint8_t _isValid = false;
     int _address;
     bool _init = false;
     TwoWire *_i2cPort;
